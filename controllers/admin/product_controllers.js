@@ -51,12 +51,12 @@ module.exports.index = async (req, res) => {
 
     // Sort
     let sort = {};
-     if(req.query.sortKey && req.query.sortValue) {
+    if (req.query.sortKey && req.query.sortValue) {
         sort[req.query.sortKey] = req.query.sortValue;
-     }
-     else {
+    }
+    else {
         sort.position = "desc"
-     }
+    }
     // End Sort
 
     const products = await Products.find(find)
@@ -147,7 +147,7 @@ module.exports.create = async (req, res) => {
     let find = {
         deleted: false
     };
-    
+
     const records = await ProductCategory.find(find)
 
     const newCategory = createTreeHelper.tree(records);
@@ -192,9 +192,17 @@ module.exports.edit = async (req, res) => {
 
         const product = await Product.findOne(find);
 
+
+        const category = await ProductCategory.find({
+            deleted: false
+        });
+
+        const newCategory = createTreeHelper.tree(category);
+
         res.render("admin/pages/products/edit", {
             pageTitle: "Chinh sua san pham",
-            product: product
+            product: product,
+            category: newCategory
         })
     } catch (error) {
         req.flash("error", `Khong ton tai san pham nay!`);
